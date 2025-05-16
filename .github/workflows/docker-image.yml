@@ -30,13 +30,13 @@ jobs:
           file: ${{ env.DOCKERFILE_PATH }}
           context: .
           build-args: |
-            r3_version: 3.9.2
-            r3_db_host: r3_db
-            r3_db_name: app
-            r3_db_user: app
-            r3_db_pass: app
-            r3_os_arch: x64
-            im_policy: /etc/ImageMagick-6/policy.xml
+            r3_version=3.9.2
+            r3_db_host=r3_db
+            r3_db_name=app
+            r3_db_user=app
+            r3_db_pass=app
+            r3_os_arch=x64
+            im_policy=/etc/ImageMagick-6/policy.xml
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.PROJECT }}:3.9.2
