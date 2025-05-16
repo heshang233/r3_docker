@@ -8,14 +8,35 @@ on:
 env:
   REGISTRY: huangsy
   PROJECT: r3
+  DOCKERFILE_PATH: Dockerfile  # Make Dockerfile path configurable
   
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{ env.REGISTRY }}/${{ env.PROJECT }}:3.9.2
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        
+      - name: Login to Docker Registry
+        uses: docker/login-action@v3.4.0
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6.17.0
+        with:
+          file: ${{ env.DOCKERFILE_PATH }}
+          context: .
+          build-args: |
+            r3_version: 3.9.2
+            r3_db_host: r3_db
+            r3_db_name: app
+            r3_db_user: app
+            r3_db_pass: app
+            r3_os_arch: x64
+            im_policy: /etc/ImageMagick-6/policy.xml
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.PROJECT }}:3.9.2
